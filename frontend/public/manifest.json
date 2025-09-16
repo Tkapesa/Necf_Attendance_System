@@ -1,0 +1,17 @@
+{
+  "name": "NECF Attendance System",
+  "short_name": "NECF Attendance",
+  "description": "New Era Christian Fellowship Attendance Management System",
+  "theme_color": "#22C55E",
+  "background_color": "#ffffff",
+  "display": "standalone",
+  "scope": "/",
+  "start_url": "/",
+  "icons": [
+    {
+      "src": "/vite.svg",
+      "sizes": "32x32",
+      "type": "image/svg+xml"
+    }
+  ]
+}

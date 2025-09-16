@@ -1,0 +1,227 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Roles
+model Role {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  description String?
+  permissions Json?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relationships
+  users User[]
+
+  @@map("roles")
+}
+
+// Users (for authentication and system access)
+model User {
+  id                String    @id @default(cuid())
+  email             String    @unique
+  firstName         String
+  lastName          String
+  password          String
+  phone             String?
+  gender            String?
+  dateOfBirth       DateTime?
+  address           String?
+  city              String?
+  state             String?
+  zipCode           String?
+  profilePicture    String?
+  status            String    @default("ACTIVE")
+  isActive          Boolean   @default(true)
+  loginAttempts     Int       @default(0)
+  lastLoginAt       DateTime?
+  emailVerifiedAt   DateTime?
+  lockedUntil       DateTime?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  // Relationships
+  role     Role    @relation(fields: [roleId], references: [id])
+  roleId   String
+  member   Member?
+  auditLogs AuditLog[]
+  createdMembers Member[] @relation("MemberCreatedBy")
+  createdQRTokens QRToken[] @relation("QRTokenCreatedBy")
+  revokedQRTokens QRToken[] @relation("QRTokenRevokedBy")
+  recordedAttendance Attendance[] @relation("AttendanceRecordedBy")
+
+  @@map("users")
+}
+
+// Members (includes all user info plus membership details)
+model Member {
+  id               String   @id @default(cuid())
+  membershipId     String   @unique
+  firstName        String
+  lastName         String
+  email            String   @unique
+  phone            String?
+  gender           String?
+  dateOfBirth      DateTime?
+  address          String?
+  city             String?
+  state            String?
+  zipCode          String?
+  profilePicture   String?
+  membershipStatus String   @default("ACTIVE")
+  joinDate         DateTime
+  endDate          DateTime?
+  notes            String?
+  emailVerifiedAt  DateTime?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  // Relationships
+  user            User?        @relation(fields: [userId], references: [id])
+  userId          String?      @unique
+  cell            Cell?        @relation(fields: [cellId], references: [id])
+  cellId          String?
+  attendance      Attendance[] @relation("MemberAttendance")
+  qrTokens        QRToken[]
+  createdBy       User?        @relation("MemberCreatedBy", fields: [createdById], references: [id])
+  createdById     String?
+
+  @@map("members")
+}
+
+// Cells
+model Cell {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  leaderId    String?
+  capacity    Int?
+  location    String?
+  meetingDay  String?
+  meetingTime String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relationships
+  members Member[]
+
+  @@map("cells")
+}
+
+// Sessions (Church Services/Events)
+model Session {
+  id          String    @id @default(cuid())
+  title       String
+  name        String?   // Alternative name field that some code expects
+  description String?
+  sessionType String    @default("SUNDAY_SERVICE")
+  status      String    @default("ACTIVE")
+  startTime   DateTime
+  endTime     DateTime
+  location    String?
+  maxCapacity Int?
+  isActive    Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  // Relationships
+  attendance Attendance[] @relation("SessionAttendance")
+
+  @@map("sessions")
+}
+
+// Attendance Records
+model Attendance {
+  id           String    @id @default(cuid())
+  status       String    @default("PRESENT")
+  checkInTime  DateTime?
+  checkOutTime DateTime?
+  checkedInAt  DateTime?
+  latitude     Float?
+  longitude    Float?
+  isManualEntry Boolean  @default(false)
+  notes        String?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  // Relationships
+  member       Member  @relation("MemberAttendance", fields: [memberId], references: [id])
+  memberId     String
+  session      Session @relation("SessionAttendance", fields: [sessionId], references: [id])
+  sessionId    String
+  recordedBy   User?   @relation("AttendanceRecordedBy", fields: [recordedById], references: [id])
+  recordedById String?
+
+  @@unique([memberId, sessionId])
+  @@map("attendance")
+}
+
+// QR Tokens
+model QRToken {
+  id         String    @id @default(cuid())
+  token      String    @unique
+  purpose    String    @default("ATTENDANCE") // "ATTENDANCE", "MEMBERSHIP", etc.
+  expiresAt  DateTime
+  isUsed     Boolean   @default(false)
+  usedAt     DateTime?
+  revokedAt  DateTime?
+  metadata   Json?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  // Relationships
+  member      Member @relation(fields: [memberId], references: [id])
+  memberId    String
+  createdBy   User?  @relation("QRTokenCreatedBy", fields: [createdById], references: [id])
+  createdById String?
+  revokedBy   User?  @relation("QRTokenRevokedBy", fields: [revokedById], references: [id])
+  revokedById String?
+
+  @@map("qr_tokens")
+}
+
+// Notifications
+model Notification {
+  id        String   @id @default(cuid())
+  title     String
+  message   String
+  type      String   @default("INFO")
+  isRead    Boolean  @default(false)
+  userId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("notifications")
+}
+
+// Audit Logs
+model AuditLog {
+  id         String   @id @default(cuid())
+  action     String
+  entity     String
+  entityId   String?
+  entityType String?
+  oldValues  Json?
+  newValues  Json?
+  metadata   Json?
+  severity   String?
+  ipAddress  String?
+  userAgent  String?
+  createdAt  DateTime @default(now())
+
+  // Relationships
+  user   User?   @relation(fields: [userId], references: [id])
+  userId String?
+
+  @@map("audit_logs")
+}

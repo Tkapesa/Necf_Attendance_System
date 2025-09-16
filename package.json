@@ -1,0 +1,49 @@
+{
+  "name": "necf-attendance-system",
+  "version": "1.0.0",
+  "description": "NECF Church Attendance Management System",
+  "private": true,
+  "scripts": {
+    "dev": "docker-compose up -d",
+    "dev:build": "docker-compose up -d --build",
+    "dev:logs": "docker-compose logs -f",
+    "dev:down": "docker-compose down",
+    "dev:clean": "docker-compose down -v && docker system prune -f",
+    "build": "npm run build:backend && npm run build:frontend",
+    "build:backend": "cd backend && npm run build",
+    "build:frontend": "cd frontend && npm run build",
+    "migrate": "cd backend && npm run migrate",
+    "migrate:deploy": "cd backend && npm run migrate:deploy",
+    "db:seed": "cd backend && npm run db:seed",
+    "db:reset": "cd backend && npm run db:reset",
+    "db:studio": "cd backend && npm run db:studio",
+    "install:all": "npm run install:backend && npm run install:frontend",
+    "install:backend": "cd backend && npm install",
+    "install:frontend": "cd frontend && npm install",
+    "lint": "npm run lint:backend && npm run lint:frontend",
+    "lint:backend": "cd backend && npm run lint",
+    "lint:frontend": "cd frontend && npm run lint",
+    "format": "npm run format:backend && npm run format:frontend",
+    "format:backend": "cd backend && npm run format",
+    "format:frontend": "cd frontend && npm run format",
+    "test": "npm run test:backend && npm run test:frontend",
+    "test:backend": "cd backend && npm run test",
+    "test:frontend": "cd frontend && npm run test",
+    "setup": "cp .env.example .env && cp backend/.env.example backend/.env && cp frontend/.env.example frontend/.env",
+    "prod": "NODE_ENV=production docker-compose -f docker-compose.yml up -d --build",
+    "prod:down": "docker-compose -f docker-compose.yml down"
+  },
+  "keywords": [
+    "church",
+    "attendance",
+    "management",
+    "system",
+    "necf"
+  ],
+  "author": "NECF Development Team",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  }
+}

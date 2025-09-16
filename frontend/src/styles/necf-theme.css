@@ -1,0 +1,90 @@
+/* NECF Logo-Inspired Color Scheme */
+:root {
+  /* Primary Colors from Logo */
+  --necf-primary: #22C55E; /* Green from logo */
+  --necf-secondary: #1E40AF; /* Blue from logo */
+  --necf-accent: #059669; /* Emerald from logo */
+  
+  /* Logo Color Variants */
+  --necf-green-50: #F0FDF4;
+  --necf-green-100: #DCFCE7;
+  --necf-green-200: #BBF7D0;
+  --necf-green-300: #86EFAC;
+  --necf-green-400: #4ADE80;
+  --necf-green-500: #22C55E;
+  --necf-green-600: #16A34A;
+  --necf-green-700: #15803D;
+  --necf-green-800: #166534;
+  --necf-green-900: #14532D;
+  
+  --necf-blue-50: #EFF6FF;
+  --necf-blue-100: #DBEAFE;
+  --necf-blue-200: #BFDBFE;
+  --necf-blue-300: #93C5FD;
+  --necf-blue-400: #60A5FA;
+  --necf-blue-500: #3B82F6;
+  --necf-blue-600: #2563EB;
+  --necf-blue-700: #1D4ED8;
+  --necf-blue-800: #1E40AF;
+  --necf-blue-900: #1E3A8A;
+}
+
+/* Logo-inspired gradients */
+.necf-gradient-primary {
+  background: linear-gradient(135deg, var(--necf-green-600) 0%, var(--necf-blue-700) 100%);
+}
+
+.necf-gradient-light {
+  background: linear-gradient(135deg, var(--necf-green-500) 0%, var(--necf-blue-600) 100%);
+}
+
+.necf-gradient-dark {
+  background: linear-gradient(135deg, var(--necf-green-800) 0%, var(--necf-blue-900) 100%);
+}
+
+/* Custom classes for logo colors */
+.necf-text-primary {
+  color: var(--necf-primary);
+}
+
+.necf-text-secondary {
+  color: var(--necf-secondary);
+}
+
+.necf-bg-primary {
+  background-color: var(--necf-primary);
+}
+
+.necf-bg-secondary {
+  background-color: var(--necf-secondary);
+}
+
+.necf-border-primary {
+  border-color: var(--necf-primary);
+}
+
+.necf-border-secondary {
+  border-color: var(--necf-secondary);
+}
+
+/* Logo container styling */
+.necf-logo-container {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.necf-logo-container:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: scale(1.05);
+  transition: all 0.3s ease;
+}
+
+/* Animation delays for staggered effects */
+.animation-delay-2000 {
+  animation-delay: 2s;
+}
+
+.animation-delay-4000 {
+  animation-delay: 4s;
+}
