@@ -1,18 +1,12 @@
--- Initial database setup for NECF Attendance System
--- This script will run when the PostgreSQL container starts
+-- ===================================================
+-- Initial database setup for NECF Attendance System (MySQL)
+-- ===================================================
 
--- Create extensions if needed
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
-CREATE EXTENSION IF NOT EXISTS "pg_trgm";
+-- Ensure database exists
+CREATE DATABASE IF NOT EXISTS necf_attendance;
+USE necf_attendance;
 
--- Create a function to update updated_at timestamp
-CREATE OR REPLACE FUNCTION update_updated_at_column()
-RETURNS TRIGGER AS $$
-BEGIN
-    NEW.updated_at = CURRENT_TIMESTAMP;
-    RETURN NEW;
-END;
-$$ language 'plpgsql';
-
--- This file will be automatically executed by Prisma migrations
--- The actual table creation is handled by Prisma schema
+-- Note:
+-- Tables will be created by Prisma migrations (schema.prisma).
+-- Triggers, views, and stored procedures are managed separately
+-- in db-triggers.sql, db-views.sql, and db-procedures.sql.
